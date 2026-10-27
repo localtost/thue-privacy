@@ -2,7 +2,6 @@
 title: "Privacy Policy"
 description: "Thue privacy policy: what data the iPhone puzzle game uses — Firebase Analytics, AdMob, the App Store purchase — and how to control it."
 effective: "Effective 26 October 2026"
-developer_label: "Developer"
 short_h: "In short"
 short:
   - "Thue has no accounts. We do not ask for your name, email or phone number."

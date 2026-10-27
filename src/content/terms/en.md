@@ -2,7 +2,6 @@
 title: "Terms of Use"
 description: "Terms of Use for Thue, the iPhone puzzle game where you edit the rules and the path follows."
 effective: "Effective 27 October 2026"
-developer_label: "Developer"
 short_h: "In short"
 short:
   - "Thue is a single-player puzzle game for iPhone. There are no accounts."

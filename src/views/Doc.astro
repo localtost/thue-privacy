@@ -2,16 +2,16 @@
 // Privacy Policy / Terms of Use: the document template approved with variant B (docs/design/doc.html) — a cream sheet on the dawn sky.
 // Text: src/content/<kind>/<lang>.md (frontmatter: title, description, effective, short[]; body: "## " sections).
 import Base from '../layouts/Base.astro';
-import { DEVELOPER, t, url, type Lang } from '../i18n';
+import { t, url, type Lang } from '../i18n';
 
 interface Props { lang: Lang; kind: 'privacy' | 'terms' }
 const { lang, kind } = Astro.props;
-type Md = { frontmatter: { title: string; description: string; effective: string; developer_label: string; short_h: string; short: string[] }; Content: any; getHeadings: () => { depth: number; slug: string; text: string }[] };
+type Md = { frontmatter: { title: string; description: string; effective: string; short_h: string; short: string[] }; Content: any; getHeadings: () => { depth: number; slug: string; text: string }[] };
 const files = import.meta.glob<Md>('../content/*/*.md', { eager: true });
 const doc = files[`../content/${kind}/${lang}.md`];
 if (!doc) throw new Error(`missing src/content/${kind}/${lang}.md`);
 const fm = doc.frontmatter;
-for (const k of ['title', 'description', 'effective', 'developer_label', 'short_h'] as const) if (!fm[k]) throw new Error(`${kind}/${lang}.md: frontmatter ${k} missing`);
+for (const k of ['title', 'description', 'effective', 'short_h'] as const) if (!fm[k]) throw new Error(`${kind}/${lang}.md: frontmatter ${k} missing`);
 const toc = doc.getHeadings().filter((h) => h.depth === 2);
 const other = kind === 'privacy' ? 'terms' : 'privacy';
 const { Content } = doc;
@@ -23,7 +23,7 @@ const { Content } = doc;
       <article>
         <p class="kicker">{t(lang, 'doc.kicker')}</p>
         <h1 id="top">{fm.title}</h1>
-        <p class="meta"><span>{fm.effective}</span><span>{fm.developer_label}: {DEVELOPER}</span></p>
+        <p class="meta"><span>{fm.effective}</span></p>
         {fm.short?.length > 0 && (
           <div class="short"><h2>{fm.short_h}</h2><ul>{fm.short.map((x) => <li>{x}</li>)}</ul></div>
         )}
