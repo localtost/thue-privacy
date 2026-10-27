@@ -1,0 +1,52 @@
+/* Thue site — tokens follow the app's DS v3 «Диорама» (Thue/docs/DESIGN_SYSTEM.md §2): Night ink, Cream, Tray, Sky.dawn / Sky.dusk. */
+:root {
+  --night: #2C2A4A; --night-deep: #18172E; --night-soft: rgba(44, 42, 74, .62); --night-body: rgba(44, 42, 74, .86);
+  --night-face: linear-gradient(180deg, #3D3A68, #2C2A4A);
+  --cream: #FFF5E9; --cream-soft: rgba(255, 245, 233, .74);
+  --tray: linear-gradient(180deg, #FFFBF6, #FFF2E4); --tray-edge: #F0E2D3; --tray-lip: #E5CDB8;
+  --chip-face: linear-gradient(180deg, #FFF8EF, #F1E1CE); --chip-edge: #E9D5C3; --chip-lip: #DDBFA6;
+  --verd-deep: #156E61; --verd-tint: #E6F7EF;
+  --sky-dawn: linear-gradient(180deg, #FFE4CE 0%, #F8C2B3 44%, #B7A5E0 100%);
+  --sky-dusk: linear-gradient(180deg, #36306A 0%, #B9779E 50%, #FFC7A4 100%);
+  --shadow: 0 6px 16px rgba(44, 42, 74, .18);
+  --font: 'Nunito', system-ui, -apple-system, sans-serif;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; font-family: var(--font); font-weight: 800; color: var(--night); background: #F8C2B3; }
+a { color: inherit; }
+img { max-width: 100%; }
+.wrap { max-width: 1120px; margin: 0 auto; padding: 0 max(20px, env(safe-area-inset-left)); }
+.kicker { font-weight: 900; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--night-soft); margin: 0; }
+.skip { position: absolute; left: 12px; top: -60px; z-index: 10; padding: 10px 16px; border-radius: 999px; background: var(--night); color: var(--cream); font-weight: 900; text-decoration: none; }
+.skip:focus { top: 12px; }
+:focus-visible { outline: 3px solid var(--night); outline-offset: 3px; border-radius: 8px; }
+
+/* header */
+.top { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 18px 0; }
+.brand { display: inline-flex; align-items: center; gap: 12px; min-height: 44px; text-decoration: none; font-weight: 900; font-size: 22px; }
+.brand img { width: 40px; height: 40px; border-radius: 10px; box-shadow: 0 3px 8px rgba(44, 42, 74, .2); }
+.langs { display: flex; gap: 4px; padding: 4px; margin: 0; list-style: none; border-radius: 999px; background: rgba(255, 255, 255, .55); border: 1px solid rgba(255, 255, 255, .8); }
+.langs a { min-width: 44px; min-height: 36px; display: grid; place-items: center; border-radius: 999px; text-decoration: none; font-weight: 900; font-size: 14px; color: var(--night-soft); }
+.langs a:hover { color: var(--night); }
+.langs a[aria-current] { background: var(--night-face); color: var(--cream); box-shadow: 0 3px 0 var(--night-deep); }
+
+/* App Store badge — Apple's artwork untouched; without a store URL it is not a link and gets a "Coming soon" capsule */
+.store { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.store img { height: 48px; width: auto; display: block; }
+.store a { display: block; border-radius: 9px; }
+.soon { display: inline-flex; align-items: center; min-height: 32px; padding: 0 14px; border-radius: 999px; font-weight: 900; font-size: 13px; }
+
+/* footer */
+.foot { display: flex; flex-wrap: wrap; gap: 8px 20px; align-items: center; justify-content: space-between; padding: 28px 0 max(36px, env(safe-area-inset-bottom)); font-size: 14px; }
+.foot nav { display: flex; gap: 4px; flex-wrap: wrap; }
+.foot nav a { min-height: 44px; display: inline-flex; align-items: center; padding: 0 12px; border-radius: 999px; text-decoration: none; font-weight: 900; }
+
+/* light pages (documents, 404): dawn sky */
+.dawn { background: var(--sky-dawn) fixed; min-height: 100vh; }
+.dawn .foot { color: var(--night-soft); }
+.dawn .foot nav a:hover { background: rgba(255, 255, 255, .55); }
+.sun { position: fixed; left: 7%; top: 100px; width: 56px; height: 56px; border-radius: 50%; background: #FFF8EC; opacity: .92; box-shadow: 0 0 110px 80px rgba(255, 249, 238, .5); z-index: -1; pointer-events: none; }
+.slab { background: var(--tray); border: 1px solid var(--tray-edge); border-radius: 28px; box-shadow: 0 6px 0 var(--tray-lip), var(--shadow); }
+
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }

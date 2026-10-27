@@ -1,0 +1,96 @@
+---
+// Page shell: <head> (SEO, hreflang, og), skip link, header with the language switch, footer.
+// One language per page; kind = null → the English-only 404 (no hreflang, noindex).
+import '@fontsource/nunito/latin-700.css';
+import '@fontsource/nunito/latin-800.css';
+import '@fontsource/nunito/latin-900.css';
+import '@fontsource/nunito/cyrillic-700.css';
+import '@fontsource/nunito/cyrillic-800.css';
+import '@fontsource/nunito/cyrillic-900.css';
+import '../styles/site.css';
+import { APP_STORE_ID, CONTACT, DEVELOPER, LANGS, LANG_LABEL, OG_LOCALE, ORIGIN, asset, t, url, type Kind, type Lang } from '../i18n';
+
+interface Props {
+  lang: Lang;
+  kind: Kind | null;
+  title: string;
+  description: string;
+  theme: 'dusk' | 'dawn';
+  jsonld?: object;
+}
+const { lang, kind, title, description, theme, jsonld } = Astro.props;
+const canonical = ORIGIN + (kind ? url(lang, kind) : url('en', 'home') + '404.html');
+const ld = jsonld && JSON.stringify(jsonld).replaceAll('</', '<\\/');
+const year = 2026;
+
+// First visit of a session on an English page → the stored or browser language, once. Other languages never redirect.
+const routing = kind && lang === 'en' ? `(function(){var A=${JSON.stringify(Object.fromEntries(LANGS.map((l) => [l, url(l, kind)])))};
+try{if(sessionStorage.getItem('thue.auto'))return;sessionStorage.setItem('thue.auto','1')}catch(e){return}
+var s=null;try{s=localStorage.getItem('thue.lang')}catch(e){}
+var n=s?[s]:(navigator.languages||[navigator.language||'']);
+for(var i=0;i<n.length;i++){var x=(n[i]||'').toLowerCase().split('-')[0];if(x==='en')return;if(A[x]){location.replace(A[x]);return}}})();` : null;
+const remember = `document.addEventListener('click',function(e){var a=e.target.closest&&e.target.closest('a[data-lang]');if(!a)return;
+try{localStorage.setItem('thue.lang',a.getAttribute('data-lang'));sessionStorage.setItem('thue.auto','1')}catch(x){}});`;
+---
+<!doctype html>
+<html lang={lang}>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+{routing && <script is:inline set:html={routing} />}
+<title>{title}</title>
+<meta name="description" content={description}>
+<meta name="theme-color" content={theme === 'dusk' ? '#36306A' : '#FFE4CE'}>
+<meta name="color-scheme" content="light">
+{!kind && <meta name="robots" content="noindex">}
+{APP_STORE_ID && <meta name="apple-itunes-app" content={`app-id=${APP_STORE_ID}`}>}
+<link rel="icon" type="image/png" href={asset('favicon.png')}>
+<link rel="apple-touch-icon" href={asset('apple-touch-icon.png')}>
+{kind && <link rel="canonical" href={canonical}>}
+{kind && LANGS.map((l) => <link rel="alternate" hreflang={l} href={ORIGIN + url(l, kind)}>)}
+{kind && <link rel="alternate" hreflang="x-default" href={ORIGIN + url('en', kind)}>}
+<meta property="og:site_name" content="Thue">
+<meta property="og:title" content={title}>
+<meta property="og:description" content={description}>
+<meta property="og:type" content="website">
+<meta property="og:url" content={canonical}>
+<meta property="og:image" content={ORIGIN + asset('apple-touch-icon.png')}>
+<meta property="og:locale" content={OG_LOCALE[lang]}>
+<meta name="twitter:card" content="summary">
+{ld && <script type="application/ld+json" set:html={ld} />}
+</head>
+<body class={theme}>
+<a class="skip" href="#main">{t(lang, 'skip')}</a>
+<slot name="before" />
+<div class="wrap shell">
+  <header class="top">
+    <a class="brand" href={url(lang, 'home')}><img src={asset('icon-96.png')} alt="" width="40" height="40">Thue</a>
+    {kind && (
+      <nav aria-label={t(lang, 'nav.lang')}>
+        <ul class="langs">
+          {LANGS.map((l) => (
+            <li><a href={url(l, kind)} hreflang={l} lang={l} data-lang={l} aria-current={l === lang ? 'page' : undefined}><span aria-hidden="true">{LANG_LABEL[l].short}</span><span class="sr">{LANG_LABEL[l].name}</span></a></li>
+          ))}
+        </ul>
+      </nav>
+    )}
+  </header>
+</div>
+<slot />
+<div class="wrap">
+  <footer class="foot">
+    <span>© {year} {DEVELOPER}</span>
+    <nav aria-label="Footer">
+      {kind !== 'home' && <a href={url(lang, 'home')}>{t(lang, 'nav.home')}</a>}
+      <a href={url(lang, 'privacy')} aria-current={kind === 'privacy' ? 'page' : undefined}>{t(lang, 'nav.privacy')}</a>
+      <a href={url(lang, 'terms')} aria-current={kind === 'terms' ? 'page' : undefined}>{t(lang, 'nav.terms')}</a>
+      <a href={`mailto:${CONTACT}`}>{t(lang, 'nav.contact')}</a>
+    </nav>
+  </footer>
+</div>
+<script is:inline set:html={remember} />
+</body>
+</html>
+<style is:global>
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+</style>

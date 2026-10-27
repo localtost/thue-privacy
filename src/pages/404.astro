@@ -1,0 +1,23 @@
+---
+// GitHub Pages serves /thue-web/404.html for any unknown path (English only, noindex).
+import Base from '../layouts/Base.astro';
+import { t, url } from '../i18n';
+---
+<Base lang="en" kind={null} title={`${t('en', 'notfound.title')} — Thue`} description={t('en', 'notfound.text')} theme="dawn">
+  <div class="sun" slot="before" aria-hidden="true"></div>
+  <main id="main" class="wrap nf">
+    <div class="slab card">
+      <p class="kicker">404</p>
+      <h1>{t('en', 'notfound.title')}</h1>
+      <p>{t('en', 'notfound.text')}</p>
+      <a class="go" href={url('en', 'home')}>{t('en', 'nav.home')}</a>
+    </div>
+  </main>
+</Base>
+<style>
+.nf { min-height: 60vh; display: grid; place-items: center; }
+.card { max-width: 460px; padding: 36px 32px; text-align: center; }
+h1 { font-weight: 900; font-size: 34px; margin: 6px 0 8px; }
+p { font-weight: 700; font-size: 17px; color: var(--night-soft); margin: 0 0 22px; }
+.go { display: inline-flex; align-items: center; min-height: 52px; padding: 0 28px; border-radius: 999px; background: var(--night-face); box-shadow: 0 6px 0 var(--night-deep); color: var(--cream); font-weight: 900; font-size: 18px; text-decoration: none; }
+</style>

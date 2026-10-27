@@ -1,0 +1,16 @@
+{
+  "name": "thue-web",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=22.12.0" },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro build && python3 scripts/site_check.py"
+  },
+  "dependencies": {
+    "@fontsource/nunito": "5.2.7",
+    "astro": "7.3.5"
+  }
+}

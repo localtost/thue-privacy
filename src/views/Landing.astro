@@ -1,0 +1,97 @@
+---
+// Landing, variant B «Сумерки» (approved 27.10.2026, docs/design/b.html): the app icon's world — dusk sky, big sun,
+// the Wanderer on the hill — with the name, the tagline and the App Store badge. Below the hill: three lines about the game.
+import Base from '../layouts/Base.astro';
+import { APP_STORE_URL, BADGE, ORIGIN, asset, t, url, type Lang } from '../i18n';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const description = t(lang, 'site.description');
+const jsonld = {
+  '@context': 'https://schema.org', '@type': 'SoftwareApplication', name: 'Thue',
+  operatingSystem: 'iOS', applicationCategory: 'GameApplication', url: ORIGIN + url(lang, 'home'),
+  inLanguage: lang, description, image: ORIGIN + asset('apple-touch-icon.png'),
+  ...(APP_STORE_URL ? { downloadUrl: APP_STORE_URL } : {}),
+};
+const FEATS = [1, 2, 3].map((n) => [t(lang, `feat.${n}.title` as 'feat.1.title'), t(lang, `feat.${n}.text` as 'feat.1.text')]);
+const badge = asset(BADGE[lang]);
+---
+<Base lang={lang} kind="home" title={t(lang, 'site.title')} description={description} theme="dusk" jsonld={jsonld}>
+  <main id="main">
+    <section class="stage" aria-labelledby="h1">
+      <div class="art" aria-hidden="true">
+        <svg viewBox="0 0 1440 900" preserveAspectRatio="xMidYMax slice" focusable="false">
+          <defs>
+            <radialGradient id="glow"><stop offset="0" stop-color="#FFF6E6" stop-opacity=".8"/><stop offset=".4" stop-color="#F3C9C9" stop-opacity=".35"/><stop offset="1" stop-color="#B9779E" stop-opacity="0"/></radialGradient>
+            <linearGradient id="cloudG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#F3E8F4"/></linearGradient>
+            <path id="spark" d="M0 -1L0.22 -0.22L1 0L0.22 0.22L0 1L-0.22 0.22L-1 0L-0.22 -0.22Z"/>
+            <g id="cloud"><ellipse cx="34" cy="16" rx="50" ry="9" fill="#E9DDF0" opacity=".9"/><g fill="url(#cloudG)"><circle cx="8" cy="6" r="13"/><circle cx="30" cy="-3" r="20"/><circle cx="54" cy="4" r="14"/><circle cx="72" cy="10" r="9"/><rect x="2" y="4" width="72" height="14" rx="7"/></g></g>
+          </defs>
+          <circle class="halo" cx="760" cy="640" r="520" fill="url(#glow)"/>
+          <circle cx="760" cy="660" r="170" fill="#FFF8EC"/>
+          <g class="stars" fill="#FFFFFF" opacity=".75"><circle cx="180" cy="140" r="1.6"/><circle cx="330" cy="260" r="1.2"/><circle cx="1180" cy="120" r="1.6"/><circle cx="1290" cy="300" r="1.1"/><circle cx="980" cy="200" r="1.2"/><circle cx="520" cy="90" r="1.3"/><use href="#spark" transform="translate(1100 220) scale(4)"/><use href="#spark" transform="translate(260 180) scale(3)"/></g>
+          <g class="c1"><use href="#cloud" transform="translate(140 560) scale(1.6)" opacity=".35"/></g>
+          <g class="c2"><use href="#cloud" transform="translate(1160 480) scale(1.3)" opacity=".3"/></g>
+          <path d="M0 900V760L720 660L1440 760V900Z" fill="#2C2A4A"/>
+          <g fill="#2C2A4A" transform="translate(650 520) scale(.82)">
+            <path d="M-6 0L-46 138Q-30 142 -14 141L24 138Z" transform="translate(40 -40)"/>
+            <circle cx="34" cy="122" r="36"/>
+            <path d="M0 160L-26 290H90L54 160Z" transform="translate(20 0)"/>
+          </g>
+        </svg>
+      </div>
+      <div class="copy wrap">
+        <h1 id="h1">Thue</h1>
+        <p class="tag">{t(lang, 'site.tagline')}</p>
+        <div class="store">
+          {APP_STORE_URL
+            ? <a href={APP_STORE_URL}><img src={badge} alt={t(lang, 'store.alt')} width="144" height="48"></a>
+            : <><img src={badge} alt={t(lang, 'store.alt')} width="144" height="48"><span class="soon">{t(lang, 'store.soon')}</span></>}
+        </div>
+      </div>
+    </section>
+    <section class="hill">
+      <div class="wrap">
+        <ul class="row">{FEATS.map(([h, p]) => <li><h2>{h}</h2><p>{p}</p></li>)}</ul>
+      </div>
+    </section>
+  </main>
+</Base>
+
+<style is:global>
+body.dusk { background: #2C2A4A; color: var(--cream); }
+.dusk .shell { position: absolute; left: 0; right: 0; top: 0; z-index: 3; }
+.dusk .brand { color: var(--cream); }
+.dusk .langs { background: rgba(255, 255, 255, .12); border-color: rgba(255, 255, 255, .25); }
+.dusk .langs a { color: var(--cream-soft); }
+.dusk .langs a:hover { color: var(--cream); }
+.dusk .langs a[aria-current] { background: var(--cream); color: var(--night); box-shadow: 0 3px 0 var(--chip-lip); }
+.dusk .foot { color: var(--cream-soft); border-top: 1px solid rgba(255, 245, 233, .12); }
+.dusk .foot nav a { color: var(--cream); }
+.dusk .foot nav a:hover { background: rgba(255, 255, 255, .1); }
+.dusk :focus-visible { outline-color: var(--cream); }
+</style>
+<style>
+.stage { position: relative; min-height: 100vh; min-height: 100svh; display: flex; flex-direction: column; background: var(--sky-dusk); overflow: hidden; }
+.art { position: absolute; inset: 0; }
+.art svg { position: absolute; left: 0; bottom: 0; width: 100%; height: 100%; }
+.copy { position: relative; z-index: 1; text-align: center; padding-top: calc(96px + 3vh); }
+h1 { font-weight: 900; font-size: clamp(76px, 13vw, 148px); letter-spacing: -.02em; line-height: .9; margin: 0; color: var(--cream); text-shadow: 0 6px 30px rgba(54, 48, 106, .35); }
+.tag { font-size: clamp(20px, 2.6vw, 28px); font-weight: 900; margin: 14px 0 28px; color: #FFE4CE; }
+.store { justify-content: center; }
+.soon { background: rgba(255, 255, 255, .14); border: 1px solid rgba(255, 255, 255, .35); color: var(--cream); }
+.hill { background: #2C2A4A; }
+.row { list-style: none; margin: 0; padding: 44px 0 20px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+h2 { font-weight: 900; font-size: 20px; margin: 0 0 6px; color: var(--cream); }
+.row p { margin: 0; font-size: 16px; line-height: 1.5; color: var(--cream-soft); font-weight: 700; }
+@media (max-width: 820px) { .row { grid-template-columns: 1fr; gap: 22px; } }
+@media (max-height: 560px) and (orientation: landscape) { .copy { padding-top: 84px; } h1 { font-size: 72px; } }
+/* the sky lives slowly (like SkyAmbient): clouds drift, the halo breathes; nothing moves with Reduce Motion */
+@media (prefers-reduced-motion: no-preference) {
+  .c1 { animation: drift 60s ease-in-out infinite alternate; }
+  .c2 { animation: drift 48s ease-in-out infinite alternate-reverse; }
+  .halo { transform-origin: 760px 640px; animation: breathe 6s ease-in-out infinite alternate; }
+}
+@keyframes drift { from { transform: translateX(-30px); } to { transform: translateX(40px); } }
+@keyframes breathe { from { opacity: .85; transform: scale(.97); } to { opacity: 1; transform: scale(1.03); } }
+</style>

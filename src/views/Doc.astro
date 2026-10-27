@@ -1,0 +1,64 @@
+---
+// Privacy Policy / Terms of Use: the document template approved with variant B (docs/design/doc.html) — a cream sheet on the dawn sky.
+// Text: src/content/<kind>/<lang>.md (frontmatter: title, description, effective, short[]; body: "## " sections).
+import Base from '../layouts/Base.astro';
+import { DEVELOPER, t, url, type Lang } from '../i18n';
+
+interface Props { lang: Lang; kind: 'privacy' | 'terms' }
+const { lang, kind } = Astro.props;
+type Md = { frontmatter: { title: string; description: string; effective: string; developer_label: string; short_h: string; short: string[] }; Content: any; getHeadings: () => { depth: number; slug: string; text: string }[] };
+const files = import.meta.glob<Md>('../content/*/*.md', { eager: true });
+const doc = files[`../content/${kind}/${lang}.md`];
+if (!doc) throw new Error(`missing src/content/${kind}/${lang}.md`);
+const fm = doc.frontmatter;
+for (const k of ['title', 'description', 'effective', 'developer_label', 'short_h'] as const) if (!fm[k]) throw new Error(`${kind}/${lang}.md: frontmatter ${k} missing`);
+const toc = doc.getHeadings().filter((h) => h.depth === 2);
+const other = kind === 'privacy' ? 'terms' : 'privacy';
+const { Content } = doc;
+---
+<Base lang={lang} kind={kind} title={`${fm.title} — Thue`} description={fm.description} theme="dawn">
+  <div class="sun" slot="before" aria-hidden="true"></div>
+  <div class="wrap">
+    <main id="main" class="sheet slab">
+      <article>
+        <p class="kicker">{t(lang, 'doc.kicker')}</p>
+        <h1 id="top">{fm.title}</h1>
+        <p class="meta"><span>{fm.effective}</span><span>{fm.developer_label}: {DEVELOPER}</span></p>
+        {fm.short?.length > 0 && (
+          <div class="short"><h2>{fm.short_h}</h2><ul>{fm.short.map((x) => <li>{x}</li>)}</ul></div>
+        )}
+        <nav class="toc" aria-labelledby="toc-h">
+          <p class="kicker" id="toc-h">{t(lang, 'doc.toc')}</p>
+          <ol>{toc.map((h) => <li><a href={`#${h.slug}`}>{h.text}</a></li>)}</ol>
+        </nav>
+        <div class="body"><Content /></div>
+        <p class="back"><a href="#top">↑ {t(lang, 'doc.top')}</a><a href={url(lang, other)}>{t(lang, other === 'terms' ? 'nav.terms' : 'nav.privacy')} →</a></p>
+      </article>
+    </main>
+  </div>
+</Base>
+
+<style>
+.sheet { max-width: 780px; margin: 8px auto 0; padding: 40px clamp(20px, 5vw, 56px) 40px; }
+h1 { font-weight: 900; font-size: clamp(32px, 5vw, 44px); letter-spacing: -.02em; line-height: 1.08; margin: 8px 0 14px; scroll-margin-top: 24px; }
+.meta { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 26px; }
+.meta span { display: inline-flex; align-items: center; min-height: 30px; padding: 0 12px; border-radius: 999px; background: var(--verd-tint); color: var(--verd-deep); font-weight: 900; font-size: 13px; }
+.meta span + span { background: #F3E8DC; color: var(--night); }
+.short { background: #fff; border: 1px solid #EEDCCB; border-radius: 20px; box-shadow: 0 5px 0 #E2C6AD; padding: 20px 22px 8px; margin: 0 0 30px; }
+.short h2 { margin: 0 0 4px; font-size: 18px; font-weight: 900; }
+.toc { margin: 0 0 36px; }
+.toc ol { list-style: none; padding: 0; margin: 10px 0 0; display: flex; flex-wrap: wrap; gap: 10px 8px; }
+.toc a { display: inline-flex; align-items: center; min-height: 40px; padding: 0 14px; border-radius: 999px; background: var(--chip-face); border: 1px solid var(--chip-edge); box-shadow: 0 4px 0 var(--chip-lip); text-decoration: none; font-weight: 900; font-size: 14px; }
+.toc a:hover { background: #fff; }
+.body { counter-reset: s; }
+.body :global(h2) { counter-increment: s; display: flex; align-items: center; gap: 12px; font-weight: 900; font-size: 22px; line-height: 1.25; margin: 34px 0 10px; scroll-margin-top: 24px; }
+.body :global(h2)::before { content: counter(s, decimal-leading-zero); flex: none; width: 34px; height: 40px; border-radius: 10px; display: grid; place-items: center; background: var(--night-face); box-shadow: 0 4px 0 var(--night-deep); color: var(--cream); font-size: 15px; }
+.body :global(h3) { font-weight: 900; font-size: 18px; margin: 22px 0 6px; }
+.sheet :global(p), .sheet :global(li) { font-weight: 700; font-size: 16.5px; line-height: 1.65; color: var(--night-body); }
+.sheet :global(ul) { padding-left: 22px; }
+.sheet :global(strong) { font-weight: 900; color: var(--night); }
+.body :global(a) { color: var(--verd-deep); font-weight: 900; overflow-wrap: anywhere; }
+.back { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin: 30px 0 0; }
+.back a { font-weight: 900; text-decoration: none; min-height: 44px; display: inline-flex; align-items: center; color: var(--night); }
+.back a:hover { text-decoration: underline; }
+</style>
