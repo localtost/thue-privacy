@@ -11,9 +11,9 @@ export const CONTACT = 'artem.kumskovmail@gmail.com';
 export const DEVELOPER = 'Artem Kumskov';
 
 /** App Store page of Thue. null until the app is published: the badge is shown with "Coming soon" and is not a link. */
-export const APP_STORE_URL: string | null = null;
+export const APP_STORE_URL: string | null = 'https://apps.apple.com/app/id6827519651';
 /** Numeric App Store id for <meta name="apple-itunes-app"> (Smart App Banner). null until published. */
-export const APP_STORE_ID: string | null = null;
+export const APP_STORE_ID: string | null = '6827519651';
 
 const KINDS: Record<Kind, string> = { home: '/', privacy: '/privacy/', terms: '/terms/' };
 export const prefix = (l: Lang) => (l === 'en' ? '' : '/' + l);
