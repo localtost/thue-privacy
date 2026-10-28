@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>E · Кино — Thue</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/v2/base.css">
+<style>
+/* E «Кино»: the store header clip (the rule + the island) fills the first screen; below, the mechanic explained by a looping diagram */
+.hero { position: relative; min-height: min(820px, 100svh); display: flex; flex-direction: column; color: var(--cream); background: #36306A; overflow: hidden; }
+.hero video, .hero .poster { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 30% 50%; }
+.hero > .wrap:last-child { margin-top: auto; }
+.hero::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(54, 48, 106, .55) 0%, rgba(54, 48, 106, 0) 28%, rgba(44, 42, 74, 0) 52%, rgba(44, 42, 74, .88) 100%); }
+.hero .wrap { position: relative; z-index: 1; width: 100%; }
+.hero .copy { margin-top: auto; padding-bottom: 48px; display: grid; grid-template-columns: 1fr auto; align-items: end; gap: 24px; }
+h1 { font-weight: 900; font-size: clamp(64px, 10vw, 128px); letter-spacing: -.02em; line-height: .9; margin: 0; text-shadow: 0 6px 30px rgba(24, 23, 46, .4); }
+.sub { font-size: clamp(22px, 2.8vw, 32px); font-weight: 900; margin: 10px 0 22px; color: #FFE4CE; }
+.pause { width: 48px; height: 48px; border-radius: 50%; border: 1px solid rgba(255, 255, 255, .4); background: rgba(24, 23, 46, .45); color: var(--cream); display: grid; place-items: center; cursor: pointer; }
+.pause svg { width: 16px; height: 16px; fill: currentColor; }
+/* mechanic */
+.mech { background: #2C2A4A; color: var(--cream); padding: 90px 0 70px; }
+.mech .kicker, .chap .kicker, .diff .kicker { color: #F8C2B3; }
+h2 { font-weight: 900; font-size: clamp(28px, 3.6vw, 42px); letter-spacing: -.01em; margin: 6px 0 14px; }
+.mech .intro { max-width: 36em; font-weight: 700; font-size: 18px; line-height: 1.55; color: var(--cream-soft); margin: 0 0 36px; }
+.demo { display: grid; grid-template-columns: 1fr 1.2fr; gap: 36px; align-items: center; padding: 34px; }
+.demo .rules { display: grid; gap: 18px; justify-items: start; }
+.demo .lbl { font-weight: 900; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--night-soft); margin: 0 0 6px; }
+.demo .rule { gap: 8px; } .demo .chip { --s: 52px; }
+.swap { position: relative; }
+.swap .chip + .chip { position: absolute; inset: 0; }
+.map { width: 100%; max-width: 300px; height: auto; justify-self: center; }
+.cap { margin: 14px 0 0; font-weight: 700; font-size: 15px; color: var(--night-body); }
+/* state toggle: A = ▶ ▶ ▲  →  A = ▶ ▲ ▲ ; the path changes in all 3 places at once */
+.s2 { opacity: 0; }
+@media (prefers-reduced-motion: no-preference) {
+  .s1 { animation: a 6s infinite; } .s2 { animation: b 6s infinite; }
+}
+@keyframes a { 0%, 42% { opacity: 1; } 50%, 92% { opacity: 0; } 100% { opacity: 1; } }
+@keyframes b { 0%, 42% { opacity: 0; } 50%, 92% { opacity: 1; } 100% { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .s2 { opacity: 1; } .s1.path { opacity: .35; } .swap .s1 { display: none; } }
+/* chapters */
+.chap { background: #2C2A4A; color: var(--cream); padding: 30px 0 70px; }
+.chap ol { list-style: none; padding: 0; margin: 26px 0 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.chap li { padding: 22px; display: flex; gap: 16px; align-items: center; }
+.chap .chip { --s: 56px; font-size: 18px; flex: none; }
+.chap h3 { margin: 0; font-weight: 900; font-size: 19px; }
+.chap p { margin: 2px 0 0; font-weight: 700; font-size: 14px; color: var(--night-soft); }
+/* difficulties */
+.diff { background: linear-gradient(180deg, #2C2A4A, #36306A); color: var(--cream); padding: 30px 0 80px; }
+.diff ul { list-style: none; padding: 0; margin: 26px 0 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.diff li { padding: 22px 24px; border-radius: 24px; border: 1px solid rgba(255, 255, 255, .16); background: rgba(255, 255, 255, .06); }
+.diff h3 { margin: 0 0 8px; font-weight: 900; font-size: 22px; color: #FFE4CE; }
+.diff p { margin: 0; font-weight: 700; color: var(--cream-soft); line-height: 1.5; }
+/* final */
+.end { background: var(--sky-dusk); color: var(--cream); text-align: center; padding: 80px 0 90px; }
+.end h2 { margin-bottom: 8px; } .end p { font-weight: 700; margin: 0 0 24px; font-size: 18px; }
+.end .store { justify-content: center; }
+.closing { background: #2C2A4A; }
+@media (max-width: 860px) {
+  .hero { min-height: 0; }
+  .hero video, .hero .poster { position: relative; height: auto; aspect-ratio: 4 / 3; object-position: 64% 50%; }
+  .hero::after { background: linear-gradient(180deg, rgba(54, 48, 106, .6) 0%, rgba(54, 48, 106, 0) 22%); bottom: auto; height: calc(100vw * .75); }
+  .hero .media { position: relative; }
+  .hero .copy { grid-template-columns: 1fr; margin-top: 0; padding: 24px 0 40px; text-align: center; background: #2C2A4A; }
+  .hero .store, .hero .facts { justify-content: center; }
+  .pause { position: absolute; right: 14px; top: calc(100vw * .75 - 62px); }
+  .demo { grid-template-columns: 1fr; padding: 22px; }
+  .chap ol, .diff ul { grid-template-columns: 1fr; }
+}
+</style></head>
+<body>
+<aside class="mocknote"><div class="wrap">
+  <nav aria-label="Макеты"><a href="d.html">D · Витрина</a><a href="e.html" aria-current="page">E · Кино</a><a href="f.html">F · Свиток</a><a href="b.html">B · текущий</a></nav>
+  <div><b>Утверждён заказчиком 27.10.2026.</b> <b>Идея E «Кино».</b> Первый экран — <b>живой ролик из шапки App Store</b> (правило <code>A = ▶ ▲ ▶ B</code> и остров, 8 с, без звука, 160 КБ) во всю ширину, поверх — название и бейдж. Ниже — главная мысль игры схемой: <b>меняется один символ — путь меняется в трёх местах сразу</b> (цикл 6 с), затем 6 глав и 3 сложности.</div>
+  <ul><li><b>Лучше текущего:</b> атмосфера та же (сумерки, остров), но мир игры настоящий, а не силуэт, и механика объяснена без слов-абстракций.</li>
+  <li>Цена: видео (постер грузится первым, ролик — после). Кнопка «пауза» обязательна (WCAG 2.2.2); при «Уменьшить движение» — только постер и обе схемы рядом. Немного inline-JS для паузы.</li></ul>
+</div></aside>
+
+<header class="hero" id="top">
+  <div class="wrap" style="position:absolute;top:0;left:0;right:0;margin:auto;z-index:2">
+    <div class="top">
+      <a class="brand" href="#top"><img src="assets/icon-256.png" alt="" width="40" height="40">Thue</a>
+      <ul class="langs" aria-label="Язык"><li><a href="#">EN</a></li><li><a href="#" aria-current="page">RU</a></li><li><a href="#">UK</a></li></ul>
+    </div>
+  </div>
+  <div class="media">
+    <video id="clip" autoplay muted loop playsinline poster="assets/v2/header-poster.jpg" aria-label="Правило A = вправо, вверх, вправо, B и парящий остров с выходом">
+      <source src="assets/v2/header-1600.mp4" type="video/mp4">
+    </video>
+  </div>
+  <div class="wrap">
+    <div class="copy">
+      <div>
+        <h1>Thue</h1>
+        <p class="sub">Измени правило — путь последует.</p>
+        <div class="store"><a href="https://apps.apple.com/app/id6827519651"><img src="assets/v2/app-store-ru.v1.svg" alt="Загрузите в App Store" width="156" height="52"></a>
+          <ul class="facts"><li>Логическая головоломка</li><li>iPhone</li><li>Бесплатно</li></ul></div>
+      </div>
+      <button class="pause" type="button" aria-label="Пауза" aria-pressed="false" id="pause"><svg viewBox="0 0 16 16"><rect x="3" y="2" width="3.5" height="12" rx="1"/><rect x="9.5" y="2" width="3.5" height="12" rx="1"/></svg></button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="mech" aria-labelledby="mech-h">
+    <div class="wrap">
+      <p class="kicker">В чём идея</p>
+      <h2 id="mech-h">Одна правка — много мест</h2>
+      <p class="intro">Героя не ведёшь. Уровень — это старт и несколько правил. Нажми «Запустить» — правила развернутся в ходы, и герой пройдёт по ним. Меняешь символ — он меняется везде, где стоит правило.</p>
+      <div class="demo slab">
+        <div class="rules">
+          <div><p class="lbl">Старт</p><div class="rule"><span class="chip ref">A</span><span class="chip ref">A</span><span class="chip ref">A</span></div></div>
+          <div><p class="lbl">Правило</p><div class="rule"><span class="chip head">A</span><span class="eq">=</span>
+            <span class="chip"><svg viewBox="-1 -1 2 2"><polygon points="-.6,-.7 .75,0 -.6,.7"/></svg></span>
+            <span class="swap"><span class="chip s1"><svg viewBox="-1 -1 2 2"><polygon points="-.6,-.7 .75,0 -.6,.7"/></svg></span><span class="chip edit s2"><svg viewBox="-1 -1 2 2"><polygon points="-.7,.6 0,-.75 .7,.6"/></svg></span></span>
+            <span class="chip"><svg viewBox="-1 -1 2 2"><polygon points="-.7,.6 0,-.75 .7,.6"/></svg></span></div></div>
+          <p class="cap">Один символ — а путь меняется трижды: правило A стоит в старте три раза.</p>
+        </div>
+        <svg class="map" viewBox="0 0 240 300" role="img" aria-label="Схема пути: до правки путь лесенкой уходит вправо мимо выхода, после правки — круче вверх, прямо к выходу">
+          <defs><pattern id="g" width="30" height="30" patternUnits="userSpaceOnUse"><rect width="30" height="30" fill="#FFFBF6" stroke="#F0E2D3"/></pattern></defs>
+          <rect x="0" y="0" width="240" height="300" rx="18" fill="url(#g)"/>
+          <rect x="91" y="91" width="28" height="28" rx="8" fill="#1F8F7E"/><rect x="98" y="98" width="14" height="21" rx="7" fill="#BDF2E1"/>
+          <polyline class="s1 path" points="15,285 45,285 75,285 75,255 105,255 135,255 135,225 165,225 195,225 195,195" fill="none" stroke="#E8553D" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="2 12"/>
+          <polyline class="s2 path" points="15,285 45,285 45,255 45,225 75,225 75,195 75,165 105,165 105,135 105,105" fill="none" stroke="#1F8F7E" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="15" cy="285" r="10" fill="#2C2A4A"/>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <section class="chap" aria-labelledby="chap-h">
+    <div class="wrap">
+      <p class="kicker">216 уровней</p>
+      <h2 id="chap-h">Шесть глав. Новая идея в каждой</h2>
+      <ol>
+        <li class="slab"><span class="chip head">A</span><div><h3>Одно правило</h3><p>Глава 1 · 12 уровней</p></div></li>
+        <li class="slab"><span class="chip head">B</span><div><h3>Правило в правиле</h3><p>Глава 2 · 12 уровней</p></div></li>
+        <li class="slab"><span class="chip head">A→A</span><div><h3>Рекурсия</h3><p>Глава 3 · 12 уровней</p></div></li>
+        <li class="slab"><span class="chip head">⊙⊡</span><div><h3>Два героя</h3><p>Глава 4 · 12 уровней</p></div></li>
+        <li class="slab"><span class="chip head">AAA</span><div><h3>Много мест</h3><p>Глава 5 · 12 уровней</p></div></li>
+        <li class="slab"><span class="chip head">A–D</span><div><h3>Проводка</h3><p>Глава 6 · 12 уровней</p></div></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="diff" aria-labelledby="diff-h">
+    <div class="wrap">
+      <p class="kicker">Три сложности — три набора карт</p>
+      <h2 id="diff-h">Играй так, как тебе нравится</h2>
+      <ul>
+        <li><h3>Свободно</h3><p>Правок без лимита, 3 подсказки.</p></li>
+        <li><h3>Обычно</h3><p>Лимит правок, 1 подсказка.</p></li>
+        <li><h3>Строго</h3><p>Минимум правок, без подсказок, лимит запусков.</p></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="end" aria-labelledby="end-h">
+    <div class="wrap">
+      <h2 id="end-h">Готов править правила?</h2>
+      <p>Бесплатно · без аккаунта · играется без сети</p>
+      <div class="store"><a href="https://apps.apple.com/app/id6827519651"><img src="assets/v2/app-store-ru.v1.svg" alt="Загрузите в App Store" width="156" height="52"></a></div>
+    </div>
+  </section>
+</main>
+<div class="closing"><div class="wrap"><footer class="foot"><span>© 2026 Thue</span><nav aria-label="Документы"><a href="doc.html">Политика конфиденциальности</a><a href="doc.html">Условия использования</a><a href="#">Связаться</a></nav></footer></div></div>
+<script>
+(function () {
+  var v = document.getElementById('clip'), b = document.getElementById('pause');
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) { v.removeAttribute('autoplay'); v.pause(); }
+  b.addEventListener('click', function () {
+    var on = v.paused; on ? v.play() : v.pause();
+    b.setAttribute('aria-pressed', String(!on)); b.setAttribute('aria-label', on ? 'Пауза' : 'Воспроизвести');
+  });
+})();
+</script>
+</body></html>

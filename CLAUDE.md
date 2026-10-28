@@ -7,7 +7,7 @@ its design law is `Thue/docs/DESIGN_SYSTEM.md` (DS v3 «Диорама»), and t
 - Answer the customer in Russian.
 - Any site task → `/web` (agent `web-developer`, `.claude/agents/web-developer.md`). New or changed meaning in texts → write
   en/ru/uk together; legal meaning (privacy/terms) — ask the customer first.
-- Design: only from the approved mockups in `docs/design/` (landing **b.html** «Сумерки», documents **doc.html**). New look → mockups
+- Design: only from the approved mockups in `docs/design/` (landing **e.html** «Кино», approved 27.10.2026 — replaced b.html «Сумерки»; documents **doc.html**). New look → mockups
   first, customer approves, then code.
 - Privacy text must match the app repo `docs/privacy/privacy-policy.md` — change both in one go.
 - Before pushing: `npm run build && python3 scripts/site_check.py` → 0 FAIL. Push to `main` deploys automatically.

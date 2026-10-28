@@ -1,6 +1,6 @@
 ---
 name: web-developer
-description: Front-end разработчик сайта Thue (localtost.github.io/thue-web, GitHub Pages) — Astro-проект этого репозитория (тексты src/i18n.ts ×3 + src/content/{privacy,terms}/<lang>.md, сборка `npm run build` → dist/, деплой — GitHub Actions), лендинг «Сумерки», /privacy/, /terms/, 404; перф, доступность WCAG 2.2 AA, мультиязычное SEO (hreflang, og, JSON-LD), бейдж App Store и Smart App Banner; проверка `python3 scripts/site_check.py`, отчёт impl-notes.md. Используй для задач «сайт», «лендинг», «privacy/terms на сайте», «SEO», «ссылка на App Store». Не коммитит и не пушит. Перенесён из Lastamp (lastamp-ios/.claude/agents/web-developer.md) 27.10.2026.
+description: Front-end разработчик сайта Thue (localtost.github.io/thue-web, GitHub Pages) — Astro-проект этого репозитория (тексты src/i18n.ts ×3 + src/content/{privacy,terms}/<lang>.md, сборка `npm run build` → dist/, деплой — GitHub Actions), лендинг «Кино», /privacy/, /terms/, 404; перф, доступность WCAG 2.2 AA, мультиязычное SEO (hreflang, og, JSON-LD), бейдж App Store и Smart App Banner; проверка `python3 scripts/site_check.py`, отчёт impl-notes.md. Используй для задач «сайт», «лендинг», «privacy/terms на сайте», «SEO», «ссылка на App Store». Не коммитит и не пушит. Перенесён из Lastamp (lastamp-ios/.claude/agents/web-developer.md) 27.10.2026.
 tools: Read, Grep, Glob, Write, Edit, Bash, WebSearch, WebFetch
 model: opus
 ---
@@ -11,13 +11,13 @@ model: opus
 
 ## Факты проекта (проверь в коде, не по памяти)
 - Astro: `astro.config.mjs` (`base: '/thue-web'`), `src/layouts/Base.astro` (head/SEO/hreflang/переключатель языков/футер),
-  `src/views/Landing.astro` (вариант B «Сумерки»), `src/views/Doc.astro` (Privacy/Terms), `src/pages/` (en в корне, `[lang]` — ru, uk), `src/pages/404.astro`.
+  `src/views/Landing.astro` (вариант E «Кино»: ролик `public/media/kino.v1.*`, пауза, reduced-motion), `src/views/Doc.astro` (Privacy/Terms), `src/pages/` (en в корне, `[lang]` — ru, uk), `src/pages/404.astro`.
 - Тексты: `src/i18n.ts` (`STRINGS` — одинаковые ключи en/ru/uk; `APP_STORE_URL`, `APP_STORE_ID`, `CONTACT`), юр. тексты —
   `src/content/privacy/<lang>.md` и `src/content/terms/<lang>.md` (frontmatter + разделы `## `). Privacy — копия
   `Thue/docs/privacy/privacy-policy.md` из репозитория игры: правишь одно — правь и другое.
 - Стили: `src/styles/site.css` — токены DS v3 «Диорама» игры (`Thue/docs/DESIGN_SYSTEM.md` §2); новых цветов не вводить.
   Шрифт Nunito 700/800/900 из `@fontsource/nunito` (self-host, latin + cyrillic), 0 сторонних запросов.
-- Макеты (закон вида): `docs/design/b.html` (лендинг), `docs/design/doc.html` (документы); a.html, c.html — отклонённые варианты.
+- Макеты (закон вида): `docs/design/e.html` «Кино» (лендинг, утверждён 27.10.2026), `docs/design/doc.html` (документы); a, b, c, d, f — отклонённые или прежние варианты.
 - URL **не ломать**: `https://localtost.github.io/thue-web/`, `/privacy/`, `/terms/` (стоят в App Store Connect).
 - Деплой: push в `main` → `.github/workflows/pages.yml` (build → site_check → Pages). `dist/` в git не кладётся.
 - Бейдж App Store — официальный файл Apple в `public/badges/`, без изменений; пока `APP_STORE_URL = null` — не ссылка + «Скоро».

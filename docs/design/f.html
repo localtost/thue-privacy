@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>F · Свиток — Thue</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/v2/base.css">
+<style>
+/* F «Свиток»: the light dawn sky of the game screens; the rule itself is the headline art; the phone stays in place while the story scrolls */
+body { background: var(--sky-dawn) fixed; color: var(--night); }
+:focus-visible { outline-color: var(--night); }
+.sun { position: fixed; right: 10%; top: 120px; width: 90px; height: 90px; border-radius: 50%; background: #FFF8EC; opacity: .92; box-shadow: 0 0 140px 100px rgba(255, 249, 238, .5); z-index: -1; }
+.hero { text-align: center; padding: 30px 0 0; }
+.hero .kicker { color: var(--night-soft); }
+.hero .rule { margin: 34px 0 30px; gap: 12px; flex-wrap: wrap; justify-content: center; }
+.hero .chip { --s: clamp(54px, 8vw, 84px); }
+.hero .eq { font-size: clamp(28px, 4vw, 44px); color: var(--night); }
+h1 { font-weight: 900; font-size: clamp(56px, 8vw, 96px); letter-spacing: -.02em; line-height: .95; margin: 10px 0 8px; }
+.sub { font-size: clamp(20px, 2.4vw, 28px); font-weight: 900; margin: 0 0 24px; color: var(--night-body); }
+.hero .store, .hero .facts { justify-content: center; }
+.hero .facts { margin-top: 16px; }
+.peek { margin: 46px auto 0; width: min(340px, 78vw); height: 330px; overflow: hidden; }
+.peek .phone { width: 100%; }
+/* story */
+.story { background: var(--tray); border-top: 1px solid var(--tray-edge); box-shadow: 0 -6px 0 rgba(229, 205, 184, .5); border-radius: 36px 36px 0 0; margin-top: -8px; position: relative; }
+.story .grid { display: grid; grid-template-columns: 1fr 340px; gap: 60px; padding-top: 40px; padding-bottom: 40px; }
+.steps { list-style: none; margin: 0; padding: 0; }
+.steps li { min-height: min(78vh, 680px); display: flex; flex-direction: column; justify-content: center; padding: 30px 0; }
+.steps .n { font-weight: 900; font-size: 13px; letter-spacing: .14em; text-transform: uppercase; color: var(--verd-deep); }
+.steps h2 { font-weight: 900; font-size: clamp(28px, 3.4vw, 40px); letter-spacing: -.01em; margin: 8px 0 12px; }
+.steps p { font-weight: 700; font-size: 18px; line-height: 1.6; color: var(--night-body); margin: 0; max-width: 28em; }
+.steps .inl { display: none; }
+.stick { position: sticky; top: max(24px, calc(50vh - 330px)); height: 660px; align-self: start; }
+.stick .phone { width: 300px; margin: 0 auto; }
+.stick img { transition: opacity .35s; }
+.stick .phone img + img { position: absolute; inset: 9px; width: calc(100% - 18px); height: calc(100% - 18px); opacity: 0; }
+.stick .phone img.on { opacity: 1; }
+/* faq */
+.faq { background: var(--tray); padding: 20px 0 70px; }
+.faq h2 { font-weight: 900; font-size: clamp(26px, 3vw, 36px); margin: 0 0 20px; }
+.faq details { border-radius: 20px; background: #fff; border: 1px solid #EEDCCB; box-shadow: 0 5px 0 #E2C6AD; margin: 0 0 16px; max-width: 760px; }
+.faq summary { cursor: pointer; padding: 18px 22px; font-weight: 900; font-size: 18px; min-height: 44px; }
+.faq details p { margin: 0; padding: 0 22px 20px; font-weight: 700; line-height: 1.6; color: var(--night-body); }
+/* end */
+.end { background: var(--sky-dusk); color: var(--cream); text-align: center; padding: 80px 0 0; }
+.end h2 { font-weight: 900; font-size: clamp(30px, 4vw, 46px); margin: 0 0 22px; }
+.end .store { justify-content: center; }
+.end .foot { margin-top: 80px; }
+.end :focus-visible { outline-color: var(--cream); }
+@media (max-width: 860px) {
+  .story .grid { grid-template-columns: 1fr; gap: 0; }
+  .stick { display: none; }
+  .steps li { min-height: 0; padding: 26px 0 34px; }
+  .steps .inl { display: block; width: 230px; margin: 22px auto 0; }
+}
+@media (prefers-reduced-motion: reduce) { .stick img { transition: none; } }
+</style></head>
+<body>
+<aside class="mocknote"><div class="wrap">
+  <nav aria-label="Макеты"><a href="d.html">D · Витрина</a><a href="e.html">E · Кино</a><a href="f.html" aria-current="page">F · Свиток</a><a href="b.html">B · текущий</a></nav>
+  <div><b>Идея F «Свиток».</b> Светлое рассветное небо экранов игры. Главный образ — <b>само правило из фишек игры</b> <code>A = ▶ ▲ ▶ B</code> крупно над названием, снизу «выглядывает» телефон. Дальше — история в 6 шагах: текст листается, а телефон справа стоит на месте и меняет экран под шаг (на телефоне — экран под каждым шагом). В конце — короткий FAQ (честно про рекламу, сеть, цену) и бейдж на сумерках.</div>
+  <ul><li><b>Лучше текущего:</b> рассказывает игру по порядку, как обучение; FAQ отвечает на вопросы до установки и даёт тексты для поиска.</li>
+  <li>Самый длинный и «журнальный». Нужно ~15 строк inline-JS (смена экрана при прокрутке); без JS — работает, показывается первый экран. Новые тексты FAQ — через content-designer.</li></ul>
+</div></aside>
+<div class="sun" aria-hidden="true"></div>
+
+<div class="light">
+<div class="wrap">
+  <header class="top">
+    <a class="brand" href="#top"><img src="assets/icon-256.png" alt="" width="40" height="40">Thue</a>
+    <ul class="langs" aria-label="Язык"><li><a href="#">EN</a></li><li><a href="#" aria-current="page">RU</a></li><li><a href="#">UK</a></li></ul>
+  </header>
+</div>
+
+<main id="top">
+  <section class="hero wrap" aria-labelledby="h1">
+    <div class="rule" role="img" aria-label="Правило: A равно вправо, вверх, вправо, B">
+      <span class="chip head">A</span><span class="eq">=</span>
+      <span class="chip"><svg viewBox="-1 -1 2 2"><polygon points="-.6,-.7 .75,0 -.6,.7"/></svg></span>
+      <span class="chip"><svg viewBox="-1 -1 2 2"><polygon points="-.7,.6 0,-.75 .7,.6"/></svg></span>
+      <span class="chip"><svg viewBox="-1 -1 2 2"><polygon points="-.6,-.7 .75,0 -.6,.7"/></svg></span>
+      <span class="chip ref">B</span>
+    </div>
+    <p class="kicker">Логическая головоломка для iPhone</p>
+    <h1 id="h1">Thue</h1>
+    <p class="sub">Правишь правила, а не героя.</p>
+    <div class="store"><a href="https://apps.apple.com/app/id6827519651"><img src="assets/v2/app-store-ru.v1.svg" alt="Загрузите в App Store" width="156" height="52"></a></div>
+    <ul class="facts"><li>6 глав</li><li>216 уровней</li><li>Бесплатно</li><li>Без сети</li></ul>
+    <div class="peek" aria-hidden="true"><div class="phone"><img src="assets/v2/ru-1-game.jpg" alt="" width="660" height="1434" fetchpriority="high"></div></div>
+  </section>
+
+  <section class="story" aria-label="Как устроена игра">
+    <div class="wrap grid">
+      <ol class="steps">
+        <li data-shot="0"><span class="n">Шаг 1</span><h2>Уровень — это правила, не карта</h2><p>Старт и несколько правил вроде A = вверх, вверх, B. Героя не ведёшь — он идёт сам.</p><div class="phone inl"><img src="assets/v2/ru-1-game.jpg" alt="Уровень: старт A и правила A, B, C" width="660" height="1434" loading="lazy"></div></li>
+        <li data-shot="1"><span class="n">Шаг 2</span><h2>Нажми «Запустить»</h2><p>Правила развернутся в ходы. Герой дойдёт до выхода, упрётся в стену или зациклится — под каждым символом видно, какие шаги он дал.</p><div class="phone inl"><img src="assets/v2/ru-2-run.jpg" alt="Путь героя после запуска" width="660" height="1434" loading="lazy"></div></li>
+        <li data-shot="2"><span class="n">Шаг 3</span><h2>Один символ — много мест</h2><p>Изменишь символ — он изменится везде, где стоит правило. Реши уровень минимумом правок — получишь звезду.</p><div class="phone inl"><img src="assets/v2/ru-3-solved.jpg" alt="Уровень решён со звездой" width="660" height="1434" loading="lazy"></div></li>
+        <li data-shot="3"><span class="n">Шаг 4</span><h2>Шесть глав</h2><p>Одно правило. Правило в правиле. Рекурсия. Два героя. Много мест. Проводка. Глава открывается, когда решена предыдущая.</p><div class="phone inl"><img src="assets/v2/ru-4-chapters.jpg" alt="Карта глав" width="660" height="1434" loading="lazy"></div></li>
+        <li data-shot="4"><span class="n">Шаг 5</span><h2>Три сложности</h2><p>Свободно, Обычно, Строго. У каждой свои 72 уровня — всего 216.</p><div class="phone inl"><img src="assets/v2/ru-5-difficulty.jpg" alt="Выбор сложности" width="660" height="1434" loading="lazy"></div></li>
+      </ol>
+      <div class="stick" aria-hidden="true"><div class="phone">
+        <img class="on" src="assets/v2/ru-1-game.jpg" alt="" width="660" height="1434"><img src="assets/v2/ru-2-run.jpg" alt="" width="660" height="1434" loading="lazy"><img src="assets/v2/ru-3-solved.jpg" alt="" width="660" height="1434" loading="lazy"><img src="assets/v2/ru-4-chapters.jpg" alt="" width="660" height="1434" loading="lazy"><img src="assets/v2/ru-5-difficulty.jpg" alt="" width="660" height="1434" loading="lazy">
+      </div></div>
+    </div>
+  </section>
+
+  <section class="faq" aria-labelledby="faq-h">
+    <div class="wrap">
+      <h2 id="faq-h">Коротко о главном</h2>
+      <details><summary>Сколько стоит?</summary><p>Thue бесплатна. После каждого решённого уровня показывается реклама. Одна покупка — «Убрать рекламу» — отключает её навсегда.</p></details>
+      <details><summary>Нужен интернет или аккаунт?</summary><p>Нет. Аккаунта нет, прогресс хранится на устройстве, играть можно без сети.</p></details>
+      <details><summary>Нужно уметь программировать?</summary><p>Нет. «Как играть» — три карточки, первая глава учит на одном правиле.</p></details>
+      <details><summary>Почему «Thue»?</summary><p>В честь Акселя Туэ, норвежского математика, который изучал переписывание строк: заменить букву строкой — и так снова и снова. Это и есть вся игра.</p></details>
+    </div>
+  </section>
+</main>
+
+<section class="end" aria-labelledby="end-h">
+  <div class="wrap">
+    <h2 id="end-h">Измени правило — путь последует.</h2>
+    <div class="store"><a href="https://apps.apple.com/app/id6827519651"><img src="assets/v2/app-store-ru.v1.svg" alt="Загрузите в App Store" width="156" height="52"></a></div>
+    <footer class="foot"><span>© 2026 Thue</span><nav aria-label="Документы"><a href="doc.html">Политика конфиденциальности</a><a href="doc.html">Условия использования</a><a href="#">Связаться</a></nav></footer>
+  </div>
+</section>
+</div>
+<script>
+(function () {
+  var shots = document.querySelectorAll('.stick img');
+  if (!('IntersectionObserver' in window) || !shots.length) return;
+  var io = new IntersectionObserver(function (es) {
+    es.forEach(function (e) {
+      if (!e.isIntersecting) return;
+      var i = +e.target.getAttribute('data-shot');
+      shots.forEach(function (s, k) { s.classList.toggle('on', k === i); });
+    });
+  }, { rootMargin: '-45% 0px -45% 0px' });
+  document.querySelectorAll('.steps li').forEach(function (li) { io.observe(li); });
+})();
+</script>
+</body></html>
